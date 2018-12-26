@@ -42,7 +42,7 @@ void Push(ElementType x, Stack s) {
 }
 
 ElementType Top(Stack s) {
-    if (s->next == NULL) {
+    if (IsEmpty(s)) {
         printf("It's null stack.");
         return 0;
     } else {
@@ -51,10 +51,10 @@ ElementType Top(Stack s) {
 }
 
 void Pop(Stack s) {
-     PtrToNode p = s->next;
-    if (p == NULL) {
+    if (IsEmpty(s)) {
         printf("It's null stack.");
     } else {
+        PtrToNode p = s->next;
         s->next = p->next;
         free(p);
     }
