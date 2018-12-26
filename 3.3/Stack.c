@@ -14,6 +14,8 @@ int IsEmpty(Stack s) {
 
 Stack CreateStack(void) {
     Stack s = malloc(sizeof(struct Node));
+    if (s == NULL) 
+        printf("Out of space.");
     s->next = NULL;
     return s;
 }
@@ -24,40 +26,36 @@ void DisposeStack(Stack s) {
 }
 
 void MakeEmpty(Stack s) {
-    while(s->next)
+    while(!IsEmpty(s))
         Pop(s);
 }
 
 void Push(ElementType x, Stack s) {
     PtrToNode p = malloc(sizeof(struct Node));
-    p->next = NULL;
-    p->element = x;
-    PtrToNode last = s;
-    while(last->next)
-        last = last->next;
-    last->next = p;
+    if (s == NULL) {
+        printf("Out of space.");
+    } else {
+        p->next = s->next;
+        p->element = x;
+        s->next = p;
+    }
 }
 
 ElementType Top(Stack s) {
-    PtrToNode last = s;
-    while(last->next)
-        last = last->next;
-    if (last == s)
-        // todo
+    if (s->next == NULL) {
         printf("It's null stack.");
-    return last->element;
+        return 0;
+    } else {
+        return s->next->element;
+    }
 }
 
 void Pop(Stack s) {
-    PtrToNode last = s;
-    PtrToNode prev = s;
-    while(last->next) {
-        prev = last;
-        last = last->next;
-    }
-    if (last == s)
-        // todo
+     PtrToNode p = s->next;
+    if (p == NULL) {
         printf("It's null stack.");
-    free(last);
-    prev->next = NULL;
+    } else {
+        s->next = p->next;
+        free(p);
+    }
 }
