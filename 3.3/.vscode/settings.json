@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "bucket.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "stack.h": "c"
     }
 }

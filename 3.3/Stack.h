@@ -7,7 +7,7 @@ typedef PtrToNode Stack;
 typedef int ElementType;
 
 int IsEmpty(Stack s);
-Stack CreateSatck(void);
+Stack CreateStack(void);
 void DisposeStack(Stack s);
 void MakeEmpty(Stack s);
 void Push(ElementType x, Stack s);
