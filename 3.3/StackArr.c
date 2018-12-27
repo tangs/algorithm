@@ -1,6 +1,7 @@
 #include "StackArr.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 struct StackRecord {
     int capacity;
