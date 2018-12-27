@@ -7,9 +7,9 @@ typedef struct StackRecord *Stack;
 typedef int ElementType;
 
 Stack CreateStack(int maxElements);
+void DisposeStack(Stack s);
 int IsEmpty(Stack s);
 int IsFull(Stack s);
-void DisposeStack(Stack s);
 void MakeEmpty(Stack s);
 void Push(ElementType x, Stack s);
 ElementType Top(Stack s);

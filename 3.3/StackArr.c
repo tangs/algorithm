@@ -10,10 +10,21 @@ struct StackRecord {
 
 Stack CreateStack(int maxElements) {
     Stack stack = malloc(sizeof(struct StackRecord));
-    stack->capacity = maxElements;
+    if (stack == NULL)
+        printf("Out of space.");
     stack->topOfStack = -1;
     stack->array = malloc(sizeof(ElementType) * maxElements);
+    if (stack->array == NULL)
+        printf("Out of space.");
+    stack->capacity = maxElements;
     return stack;
+}
+
+void DisposeStack(Stack s) {
+    if (s != NULL) {
+        free(s->array);
+        free(s);
+    }
 }
 
 int IsEmpty(Stack s) {
@@ -22,11 +33,6 @@ int IsEmpty(Stack s) {
 
 int IsFull(Stack s) {
     return s->topOfStack == s->capacity - 1;
-}
-
-void DisposeStack(Stack s) {
-    free(s->array);
-    free(s);
 }
 
 void MakeEmpty(Stack s) {
