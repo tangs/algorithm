@@ -1,10 +1,10 @@
-objects = main.o Stack.o
+objects = main.o StackArr.o
 
 debug : $(objects)
 	cc -g -o main $(objects)
 
-main.o : Stack.h
-Stack.o : Stack.h
+main.o : StackArr.h
+StackArr.o : StackArr.h
 
 .PHONY : clean
 clean : 

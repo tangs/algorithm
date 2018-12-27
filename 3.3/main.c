@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include "Stack.h"
+#include "StackArr.h"
 
 int main() {
-    Stack s = CreateStack();
+    Stack s = CreateStack(100);
     Push(34, s);
     Push(66, s);
     Push(4, s);
