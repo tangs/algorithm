@@ -1,10 +1,13 @@
 #ifndef _Stack_h
 #define _Stack_h
 
+#include "def.h"
+
 struct StackRecord;
 typedef struct StackRecord *Stack;
 
-typedef int ElementType;
+typedef struct Data ElementType;
+// typedef int ElementType;
 
 Stack CreateStack(int maxElements);
 void DisposeStack(Stack s);

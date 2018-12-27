@@ -1,11 +1,15 @@
-objects = main.o StackArr.o
+objects = StackArr.o
 
-debug : $(objects)
-	cc -g -o main $(objects)
+debug : main.o Stack.o
+	cc -g -o main main.o Stack.o
+
+bs : BalanceSymbol.o StackArr.o
+	cc -g -o main BalanceSymbol.o StackArr.o
 
 main.o : StackArr.h
-StackArr.o : StackArr.h
+BalanceSymbol.o : StackArr.h Def.h
+StackArr.o : StackArr.h Def.h
 
 .PHONY : clean
 clean : 
-	rm main $(objects)
+	rm bs main main.o BalanceSymbol.o StackArr.o Stack.o

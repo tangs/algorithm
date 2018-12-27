@@ -51,10 +51,9 @@ void Push(ElementType x, Stack s) {
 ElementType Top(Stack s) {
     if (IsEmpty(s)) {
         printf("Stack is empty.");
-        return 0;
-    } else {
-        return s->array[s->topOfStack];
+        // return 0;
     }
+    return s->array[s->topOfStack];
 }
 
 void Pop(Stack s) {

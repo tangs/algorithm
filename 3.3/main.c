@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include "StackArr.h"
+#include "Stack.h"
 
 int main() {
-    Stack s = CreateStack(100);
+    Stack s = CreateStack();
     Push(34, s);
     Push(66, s);
     Push(4, s);
@@ -13,5 +13,6 @@ int main() {
         printf("%d\n", Top(s));
         Pop(s);
     }
+    DisposeStack(s);
     return 0;
 }
