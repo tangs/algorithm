@@ -89,9 +89,14 @@ ElementType calc(const char* str) {
                         continue;
                     }
                 }
-                while (!IsEmpty(signedS) 
-                    && Top(signedS) != '(' 
-                    && getPriority(ch) <= getPriority(Top(signedS))) {
+                while (1) {
+                    if (IsEmpty(signedS)) break;
+                    if (Top(signedS) == '(') break;
+                    int priority = getPriority(ch);
+                    int lastPriority = getPriority(Top(signedS));
+                    if (priority > lastPriority) break;
+                    // ^
+                    if (priority == 3 && lastPriority == 3) break;
                     calcNum(numS, signedS);
                 }
                 Push(ch, signedS);
