@@ -1,6 +1,7 @@
 #include "Calculator.h"
 
 #include <stdio.h>
+#include <math.h>
 
 #include "StackArr.h"
 
@@ -12,13 +13,15 @@ int getPriority(char ch) {
         case '*':
         case '/':
             return 2;
+        case '^':
+            return 3;
         default:
             return 0;
     }
 }
 
-int readNum(const char* str, int* pNum) {
-    int num = 0;
+ElementType readNum(const char* str, ElementType* pNum) {
+    ElementType num = 0;
     char* p = (char*)str;
     while(*p && *p >= '0' && *p <= '9') {
         num = num * 10 + (*p - '0');
@@ -28,7 +31,7 @@ int readNum(const char* str, int* pNum) {
     return p - str;
 }
 
-int calcNum(Stack numS, Stack signedS) {
+ElementType calcNum(Stack numS, Stack signedS) {
     if (IsEmpty(signedS)) {
         return 0;
     }
@@ -49,12 +52,15 @@ int calcNum(Stack numS, Stack signedS) {
         case '/':
             num = num1 / num2;
         break;
+        case '^':
+            num = (ElementType)pow(num1, num2);
+        break;
     }
     Push(num, numS);
     return 1;
 }
 
-int calc(const char* str) {
+ElementType calc(const char* str) {
     Stack numS = CreateStack(128);
     Stack signedS = CreateStack(128);
     int idx = 0;
@@ -64,7 +70,7 @@ int calc(const char* str) {
         if (ch == 0) break;
         if (ch == ' ') continue;
         if (ch >= '0' && ch <= '9') {
-            int num = 0;
+            ElementType num = 0;
             --idx;
             idx += readNum(str + idx, &num);
             Push(num * sign, numS);
