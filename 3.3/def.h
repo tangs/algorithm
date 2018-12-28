@@ -7,4 +7,7 @@ struct Data {
     char ch;
 };
 
+// typedef struct Data ElementType;
+typedef int ElementType;
+
 #endif // _def_h
