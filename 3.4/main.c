@@ -12,7 +12,7 @@ int main() {
     Dequeue(q);
     Enqueue(5, q);
     Enqueue(6, q);
-    Enqueue(7, q);
+    // Enqueue(7, q);
     while(!IsEmpty(q))
         printf("%d\n", FrontAndDequeue(q));
     // Dequeue(q);
