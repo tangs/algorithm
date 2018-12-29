@@ -6,7 +6,7 @@
 struct QueueRecord {
     int front;
     int rear;
-    int size;
+    int capacity;
     ElementType* array;
 };
 
@@ -14,7 +14,7 @@ Queue CreateQueue(int maxElements) {
     Queue q = malloc(sizeof(struct QueueRecord));
     q->front = 0;
     q->rear = 0;
-    q->size = maxElements;
+    q->capacity = maxElements;
     q->array = malloc(maxElements * sizeof(int));
     return q;
 }
@@ -30,7 +30,7 @@ int IsEmpty(Queue q) {
 }
 
 int IsFull(Queue q) {
-    return ((q->front + q->size) - q->rear) % q->size == 1;
+    return ((q->front + q->capacity) - q->rear) % q->capacity == 1;
 }
 
 void MakeEmpty(Queue q) {
@@ -44,7 +44,7 @@ void Enqueue(ElementType x, Queue q) {
         return;
     }
     q->array[q->rear++] = x;
-    if (q->rear == q->size)
+    if (q->rear == q->capacity)
         q->rear = 0;
 }
 
@@ -53,7 +53,7 @@ void Dequeue(Queue q) {
         printf("Dequeue fail, the queue is empty.%p\n", q);
         return;
     }
-    if(++q->front == q->size)
+    if(++q->front == q->capacity)
         q->front = 0;
 }
 
@@ -71,7 +71,7 @@ ElementType FrontAndDequeue(Queue q) {
         return 0;
     }
     ElementType ret = q->array[q->front++];
-    if(q->front == q->size)
+    if(q->front == q->capacity)
         q->front = 0;
     return ret;
 }
