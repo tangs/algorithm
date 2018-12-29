@@ -13,8 +13,10 @@ int getPriority(char ch) {
         case '*':
         case '/':
             return 2;
-        case '^':
+        case '%':
             return 3;
+        case '^':
+            return 4;
         default:
             return 0;
     }
@@ -51,6 +53,9 @@ ElementType calcNum(Stack numS, Stack signedS) {
         break;
         case '/':
             num = num1 / num2;
+        break;
+        case '%':
+            num = num1 % num2;
         break;
         case '^':
             num = (ElementType)pow(num1, num2);
@@ -96,7 +101,7 @@ ElementType calc(const char* str) {
                     int lastPriority = getPriority(Top(signedS));
                     if (priority > lastPriority) break;
                     // ^
-                    if (priority == 3 && lastPriority == 3) break;
+                    if (priority == 4 && lastPriority == 4) break;
                     calcNum(numS, signedS);
                 }
                 Push(ch, signedS);
