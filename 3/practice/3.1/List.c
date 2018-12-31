@@ -45,7 +45,7 @@ Position Find(ElementType x, List l) {
 
 Position FindPrevious(ElementType x, List l) {
     Position p = l;
-    while (l->next != NULL && l->next->element != x) {
+    while (p->next != NULL && p->next->element != x) {
         p = p->next;
     }
     return p;
