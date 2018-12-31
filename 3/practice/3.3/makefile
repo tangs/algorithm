@@ -1,10 +1,15 @@
 objects = main.o List.o
 sources = main.c List.c
 
-main : $(objects)
+list : $(objects)
 	cc -o main $(objects)
 
+duList : main.o DuLinkList.o
+	cc -o main main.o DuLinkList.o
+
 main.o : List.o
+
+DuLinkList.o : DuLinkList.h def.h
 
 List.o : List.h def.h
 

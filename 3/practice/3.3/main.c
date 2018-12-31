@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "List.h"
+// #include "List.h"
+#include "DuLinkList.h"
 
 void PrintElements(List l) {
     Position p = First(l);
-    while (p) {
+    while (p && p != l) {
         printf("%d\n", Retrieve(p));
         p = Advance(p);
     }
