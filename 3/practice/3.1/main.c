@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "List.h"
 
@@ -22,5 +23,8 @@ int main() {
     Append(7, l);
     Append(8, l);
     printElements(l);
+
+    DeleteList(l);
+    free(l);
     return 0;
 }

@@ -19,7 +19,7 @@ List CreateList(void) {
 }
 
 void DeleteList(List l) {
-    Position p = l, tmp;
+    Position p = l->next, tmp;
     l->next = NULL;
     while(p != NULL) {
         tmp = p;
