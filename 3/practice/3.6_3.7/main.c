@@ -33,6 +33,7 @@ Polynomial AdditionPolynomial(Polynomial p1, Polynomial p2) {
     return sum;
 }
 
+// 3.7
 Polynomial MultiplyPolynomial(Polynomial p1, Polynomial p2) {
     Polynomial ret = CreatePolynomial();
     Position pos1 = First(p1);
@@ -51,6 +52,34 @@ Polynomial MultiplyPolynomial(Polynomial p1, Polynomial p2) {
     return ret;
 }
 
+// 3.8
+Polynomial PowPolynomial(Polynomial x, int exponent) {
+    Polynomial ret = NULL;
+    if (exponent <= 0) {
+        return ret;
+    }
+    if (exponent == 1) {
+        ret = CreatePolynomial();
+        Position pos = First(x);
+        while (pos != NULL) {
+            int coe = Coefficient(pos);
+            int exp = Exponent(pos);
+            Add(coe, exp, ret);
+            pos = Advance(pos);
+        }
+        return ret;
+    }
+    for (int i = 0; i < exponent - 1; ++i) {
+        Polynomial tmp = ret;
+        Polynomial y = i ? ret : x;
+        ret = MultiplyPolynomial(x, y);
+        if (tmp) {
+            DisposePolynomial(tmp);
+        }
+    }
+    return ret;
+}
+
 int main() {
     Polynomial p1 = CreatePolynomial();
     Polynomial p2 = CreatePolynomial();
@@ -64,16 +93,19 @@ int main() {
     Add(2, 1, p2);
     Add(1, 2, p2);
 
-    Polynomial sum = AdditionPolynomial(p1, p2);
-    Polynomial multiply = MultiplyPolynomial(p1, p2);
+    Polynomial sumP = AdditionPolynomial(p1, p2);
+    Polynomial multiplyP = MultiplyPolynomial(p1, p1);
+    Polynomial powP = PowPolynomial(p1, 3);
 
     PrintPolynomial(p1);
     PrintPolynomial(p2);
-    PrintPolynomial(sum);
-    PrintPolynomial(multiply);
+    PrintPolynomial(sumP);
+    PrintPolynomial(multiplyP);
+    PrintPolynomial(powP);
 
     DisposePolynomial(p1);
     DisposePolynomial(p2);
-    DisposePolynomial(sum);
-    DisposePolynomial(multiply);
+    DisposePolynomial(sumP);
+    DisposePolynomial(multiplyP);
+    DisposePolynomial(powP);
 }
