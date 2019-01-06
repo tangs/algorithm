@@ -61,7 +61,7 @@ void AddValue(int digit, int value, Number num) {
     int dest = p->value + value;
     if (dest < 0) {
         p->value = dest + 10;
-        AddValue(digit - 1, -1, num);
+        AddValue(digit + 1, -1, num);
     } else if (dest < 10) {
         p->value = dest;
     } else {
@@ -79,10 +79,13 @@ int Value(Number num) {
 }
 
 Position GetPostion(int digit, Number num) {
-    Position p = First(num);
-    while (p && p->digit < digit)
+    Position prev = num;
+    Position p = num->next;
+    while (p && p->digit > digit) {
+        prev = p;
         p = p->next;
-    if (p->digit != digit) {
+    }
+    if (!p || p->digit != digit) {
         Position p1 = malloc(sizeof(struct Node));
         if (p1 == NULL) {
             // out of memory.
@@ -90,8 +93,9 @@ Position GetPostion(int digit, Number num) {
         }
         p1->digit = digit;
         p1->value = 0;
-        p1->next = p->next;
-        p->next = p1;
+        p1->next = prev->next;
+        prev->next = p1;
+        return p1;
     }
     return p;
 }
@@ -124,13 +128,13 @@ Number Mut(Number num1, Number num2) {
         return NULL;
     }
     Position p1 = First(num1);
-    Position p2 = First(num2);
     while (p1) {
+        Position p2 = First(num2);
         while (p2) {
-            int digit = Digit(num1) + Digit(num2) - 1;
-            int value = Value(num1) * Value(num2);
+            int digit = Digit(p1) + Digit(p2) - 1;
+            int value = Value(p1) * Value(p2);
             AddValue(digit, value % 10, ret);
-            if (value > 10) {
+            if (value >= 10) {
                 AddValue(digit + 1, value / 10, ret);
             }
             p2 = p2->next;
