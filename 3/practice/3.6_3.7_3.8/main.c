@@ -53,6 +53,7 @@ Polynomial MultiplyPolynomial(Polynomial p1, Polynomial p2) {
 }
 
 // 3.8
+// 时间复杂度(O^n)
 Polynomial PowPolynomial(Polynomial x, int exponent) {
     Polynomial ret = NULL;
     if (exponent <= 0) {
