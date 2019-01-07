@@ -4,6 +4,7 @@
 
 struct Node {
     ElementType element;
+    Position prev;
     Position next;
 };
 
@@ -15,6 +16,7 @@ List CreateList(void) {
     }
     l->element = 0;
     l->next = l;
+    l->prev = l;
     return l;
 }
 
@@ -26,6 +28,8 @@ void MakeEmpty(List l) {
         p = p->next;
         free(tmp);
     }
+    l->next = l;
+    l->prev = l;
 }
 
 void DisposeList(List l) {
@@ -54,13 +58,14 @@ Position First(List l) {
 }
 
 Position Last(List l) {
-    Position p = l;
-    while (p->next != l)
-        p = p->next;
-    return p;
+    // Position p = l;
+    // while (p->next != l)
+    //     p = p->next;
+    // return p;
+    return l->prev;
 }
 
-Position Next(Position p, List l) {
+inline Position Next(Position p, List l) {
     if (p->next == l) {
         return l->next;
     }
@@ -68,10 +73,14 @@ Position Next(Position p, List l) {
 }
 
 Position Prev(Position p, List l) {
-    Position prev = l->next;
-    while (prev->next != p)
-        prev = prev->next;
-    return prev;
+    // Position prev = l->next;
+    // while (prev->next != p)
+    //     prev = prev->next;
+    // return prev;
+    if (p->prev == l) {
+        return l->prev->prev;
+    }
+    return p->prev;
 }
 
 void Insert(ElementType x, Position p, List l) {
@@ -82,23 +91,31 @@ void Insert(ElementType x, Position p, List l) {
     }
     dest->element = x;
     dest->next = p->next;
+    
+    Position next = p->next;
     p->next = dest;
+    next->prev = dest;
+    dest->next = next;
+    dest->prev = p;
 }
 
 void Append(ElementType x, List l) {
     Insert(x, Last(l), l);
 }
 
-void Delete(Position p, List l) {
-    Position prev = Prev(p, l);
-    prev->next = p->next;
+Position Delete(Position p, List l) {
+    Position prev = p->prev;
+    Position next = p->next;
+    prev->next = next;
+    next->prev = prev;
     free(p);
+    return prev;
 }
 
 ElementType Retrieve(Position p, List l) {
     return p->element;
 }
 
-Position Advance(Position p, List l) {
+inline Position Advance(Position p, List l) {
     return Next(p, l);
 }

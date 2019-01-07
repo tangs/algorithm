@@ -21,7 +21,7 @@ Position Next(Position p, List l);
 Position Prev(Position p, List l);
 void Insert(ElementType x, Position p, List l);
 void Append(ElementType x, List l);
-void Delete(Position p, List l);
+Position Delete(Position p, List l);
 ElementType Retrieve(Position p, List l);
 Position Advance(Position p, List l);
 
