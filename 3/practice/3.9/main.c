@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <limits.h>
+#include <string.h>
 
 #include "Number.h"
 
 int PrintZore(int times, char *str, int len) {
-    for (int i = 0; i < times; ++i) {
-        snprintf(str++, len, "%d", 0);
-    }
+    // for (int i = 0; i < times; ++i) {
+    //     snprintf(str++, len, "%d", 0);
+    // }
+    if (times > 0)
+        memset(str, '0', times);
     return times;
 }
 
@@ -39,9 +42,8 @@ int main() {
     Number num1 = CreateNumber();
     AddValue(1, 2, num1);
 
-    // Number num2 = CreateNumber();
-    // AddValue(1, 2, num2);
-
+    Number num2 = CreateNumber();
+    AddValue(1, 999999999, num2);
 
     Number ret = Mut(num1, num1);
     for (int i = 0; i < 3998; ++i) {
@@ -50,7 +52,7 @@ int main() {
         DisposeNumber(tmp);
     }
     // PrintNumber(ret);
-    const len = 1024 * 10;
+    const int len = 1024 * 10;
     char str[len];
     int cnt = NumberToString(ret, str, len);
     int cnts[10];
@@ -64,8 +66,13 @@ int main() {
     }
     printf("total:%d\n", cnt);
 
+    Number ret2 = Mut(num2, num2);
+    NumberToString(ret2, str, len);
+    printf("%s\n", str);
+
     DisposeNumber(num1);
-    // DisposeNumber(num2);
+    DisposeNumber(num2);
     DisposeNumber(ret);
+    DisposeNumber(ret2);
     return 0;
 }

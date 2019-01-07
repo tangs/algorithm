@@ -132,7 +132,7 @@ Number Mut(Number num1, Number num2) {
         Position p2 = First(num2);
         while (p2) {
             int digit = Digit(p1) + Digit(p2) - 1;
-            int value = Value(p1) * Value(p2);
+            int64_t value = (int64_t)Value(p1) * Value(p2);
             AddValue(digit, value % NUMBER_OVERFLOWVALUE, ret);
             if (value >= NUMBER_OVERFLOWVALUE) {
                 AddValue(digit + 1, value / NUMBER_OVERFLOWVALUE, ret);
