@@ -1,6 +1,9 @@
 #ifndef _Number_h
 #define _Number_h
 
+#define NUMBER_OVERFLOWBITS 10
+#define NUMBER_OVERFLOWVALUE 1000000000
+
 struct Node;
 
 typedef struct Node *PrtToNode;

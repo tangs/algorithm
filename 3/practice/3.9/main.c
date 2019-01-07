@@ -11,12 +11,17 @@ void PrintZore(int times) {
 void PrintNumber(Number num) {
     Position p = First(num);
     Position prev = NULL;
-    int digit = 0;
+    int digit = -1;
+    char tmp[NUMBER_OVERFLOWBITS];
+    memset(tmp, '0', NUMBER_OVERFLOWBITS - 1);
     while (p) {
         int curDigit = Digit(p);
-        PrintZore(digit - curDigit);
+        PrintZore((digit - curDigit) * NUMBER_OVERFLOWBITS);
+        int len = snprintf(tmp, NUMBER_OVERFLOWBITS, "%d", Value(p));
+        if (digit != -1)
+            PrintZore(NUMBER_OVERFLOWBITS - len - 1);
+        printf("%s", tmp);
         digit = curDigit - 1;
-        printf("%d", Value(p));
         prev = p;
         p = Advance(p);
     }

@@ -60,12 +60,12 @@ void AddValue(int digit, int value, Number num) {
     Position p = GetPostion(digit, num);
     int dest = p->value + value;
     if (dest < 0) {
-        p->value = dest + 10;
+        p->value = dest + NUMBER_OVERFLOWVALUE;
         AddValue(digit + 1, -1, num);
-    } else if (dest < 10) {
+    } else if (dest < NUMBER_OVERFLOWVALUE) {
         p->value = dest;
     } else {
-        p->value = dest % 10;
+        p->value = dest % NUMBER_OVERFLOWVALUE;
         AddValue(digit + 1, 1, num);
     }
 }
@@ -133,9 +133,9 @@ Number Mut(Number num1, Number num2) {
         while (p2) {
             int digit = Digit(p1) + Digit(p2) - 1;
             int value = Value(p1) * Value(p2);
-            AddValue(digit, value % 10, ret);
-            if (value >= 10) {
-                AddValue(digit + 1, value / 10, ret);
+            AddValue(digit, value % NUMBER_OVERFLOWVALUE, ret);
+            if (value >= NUMBER_OVERFLOWVALUE) {
+                AddValue(digit + 1, value / NUMBER_OVERFLOWVALUE, ret);
             }
             p2 = p2->next;
         }
