@@ -112,7 +112,7 @@ Position Delete(Position p, List l) {
     return prev;
 }
 
-ElementType Retrieve(Position p, List l) {
+inline ElementType Retrieve(Position p, List l) {
     return p->element;
 }
 
