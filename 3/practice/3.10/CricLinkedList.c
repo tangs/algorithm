@@ -90,7 +90,7 @@ void Insert(ElementType x, Position p, List l) {
         return;
     }
     dest->element = x;
-    dest->next = p->next;
+    // dest->next = p->next;
     
     Position next = p->next;
     p->next = dest;
