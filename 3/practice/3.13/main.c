@@ -7,26 +7,26 @@ void ShowList(List l, int cmp) {
     ElementType last = 0;
     while (!(IsHeader(p, l))) {
         ElementType element = Retrieve(p);
-        printf("%d ", element);
+        // printf("%d ", element);
         p = Advance(p, l);
         if (cmp && last > element) {
-            printf("\nerr\n");
+            printf("\nerr:%d %d\n", last, element);
         }
         last = element;
     }
-    printf("\n");
+    // printf("\n");
 }
 
 int main() {
     List l = CreateList();
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 10000000; ++i) {
         ElementType x = rand() % 1000000000;
         // printf("%d ", x);
         Append(x, l);
     }
     // printf("\n");
     printf("before sort.\n");
-    ShowList(l, 0);
+    // ShowList(l, 0);
     Sort_Bucket(l, 1000, 3);
     printf("after sort.\n");
     ShowList(l, 1);

@@ -22,7 +22,7 @@ void Sort_Bucket(List l, int base, int times) {
     for (int i = 0; i < base; ++i)
         buckets[i] = CreateList();
     
-    int num = base;
+    int num = 1;
     for (int i = 0; i < times; ++i) {
         Position p = First(l);
         while (!IsHeader(p, l)) {
