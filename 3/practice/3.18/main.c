@@ -48,11 +48,13 @@ int GetNextStrType(char *str, int lastType) {
     }
 }
 
-ElementType GetElement(int type, int row, int col) {
+ElementType GetElement(int type, int index, int row, int col) {
     ElementType data;
+    data.index = index;
     data.type = type;
     data.row = row;
     data.col = col;
+    data.intervalChars = 0;
     switch (type) {
         case 1:
         case 2:
@@ -67,6 +69,7 @@ ElementType GetElement(int type, int row, int col) {
         case 5:
             data.priorty = 2;
             data.strLen = 1;
+            data.intervalChars = 2;
         break;
         case 6:
             data.priorty = 3;
@@ -76,28 +79,35 @@ ElementType GetElement(int type, int row, int col) {
     return data;
 }
 
-int Check(char *str) {
+int Check(char *pStr) {
     // char ch;
     Stack s = CreateStack();
     int row = 1;
     int col = 1;
     // int isNote = 0;
+    char *str = pStr;
+    int index = 0;
     while (*str) {
         int lastType = IsEmpty(s) ? -1 : Top(s).type;
         int ret = GetNextStrType(str, lastType);
         char type = (char)ret & 0xff;
         int strLen = 1;
         if (type) {
-            ElementType data = GetElement(type, row, col);
+            ElementType data = GetElement(type, index, row, col);
             if (ret >> 8) {
                 if (IsEmpty(s)) {
                     printf("balance fail1.line: %d col: %d type:%d\n", row, col, type);
                     return 1;
                 } else if (Top(s).type == type) {
+                    int intervalChars = Top(s).intervalChars;
+                    if (intervalChars && intervalChars != data.index - Top(s).index) {
+                        printf("balance fail4.line: %d col: %d type:%d\n", row, col, type);
+                        return 4;
+                    }
                     Pop(s);
                 } else if (Top(s).priorty <= data.priorty){
                     printf("balance fail2.line: %d col: %d type:%d\n", row, col, type);
-                    return 1;
+                    return 2;
                 }
             } else {
                 if (IsEmpty(s) || Top(s).priorty <= data.priorty)
@@ -108,18 +118,21 @@ int Check(char *str) {
         if (*str == '\n') {
             ++row;
             col = 1;
+            index += 1;
         } else if (*str == '\\' && *(str+1)) {
             strLen = 2;
             col += strLen;
+            index += 1;
         } else {
             col += strLen;
+            index += strLen;
         }
         str += strLen;
     }
     if (!IsEmpty(s)) {
 
         printf("balance fail3.line: %d col: %d type:%d\n", Top(s).row, Top(s).col, Top(s).type);
-        return 1;
+        return 3;
     }
     return 0;
 }
