@@ -101,7 +101,7 @@ void DeleteRepeat(List l) {
 }
 
 ElementType Retrieve(Position p, List l) {
-    return (l->data)[p-1];
+    return l->data[p-1];
 }
 
 Position Advance(Position p, List l) {
