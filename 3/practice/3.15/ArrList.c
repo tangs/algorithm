@@ -56,6 +56,10 @@ void Add(ElementType x, List l) {
     CursorSpace[l].next = p;
 }
 
+Position Header(List l) {
+    return l;
+}
+
 Position First(List l) {
     return CursorSpace[l].next;
 }
