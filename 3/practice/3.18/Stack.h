@@ -1,7 +1,8 @@
 #ifndef _Stack_h
 #define _Stack_h
 
-typedef char ElementType;
+// typedef char ElementType;
+#include "Def.h"
 
 struct Node;
 typedef struct Node *PtrToNode;

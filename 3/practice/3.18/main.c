@@ -7,13 +7,13 @@
  * 1: (
  * 2: [
  * 3: {
- * 4: *
+ * 4: / *
  * 1 << 8: )
  * (1 << 8) + 1: ]
  * (1 << 8) + 2: }
- * (1 << 8) + 3: *
+ * (1 << 8) + 3: * /
  */
-int GetNextStrType(char *str) {
+int GetNextStrType(char *str, int lastType) {
     switch(*str) {
         case '(':
             return 1;
@@ -25,6 +25,14 @@ int GetNextStrType(char *str) {
             if (*(str+1) == '*')
                 return 4;
             return 0;
+        case '\'':
+            if (lastType == 5)
+                return (1 << 8) + 5;
+            return 5;
+        case '\"':
+            if (lastType == 6)
+                return (1 << 8) + 6;
+            return 6;
         case ')':
             return (1 << 8) + 1;
         case ']':
@@ -40,57 +48,82 @@ int GetNextStrType(char *str) {
     }
 }
 
+ElementType GetElement(int type, int row, int col) {
+    ElementType data;
+    data.type = type;
+    data.row = row;
+    data.col = col;
+    switch (type) {
+        case 1:
+        case 2:
+        case 3:
+            data.priorty = 1;
+            data.strLen = 1;
+        break;
+        case 4:
+            data.priorty = 4;
+            data.strLen = 2;
+        break;
+        case 5:
+            data.priorty = 2;
+            data.strLen = 1;
+        break;
+        case 6:
+            data.priorty = 3;
+            data.strLen = 1;
+        break;
+    }
+    return data;
+}
+
 int Check(char *str) {
     // char ch;
     Stack s = CreateStack();
-    int line = 1;
+    int row = 1;
     int col = 1;
-    int isNote = 0;
+    // int isNote = 0;
     while (*str) {
-        int ret = GetNextStrType(str);
+        int lastType = IsEmpty(s) ? -1 : Top(s).type;
+        int ret = GetNextStrType(str, lastType);
         char type = (char)ret & 0xff;
+        int strLen = 1;
         if (type) {
+            ElementType data = GetElement(type, row, col);
             if (ret >> 8) {
-                if (!isNote || type == 4) {
-                    if (IsEmpty(s)) {
-                        printf("balance fail.line: %d col: %d type:%d\n", line, col, type);
-                        return 1;
-                    } else if (Top(s) == type) {
-                        Pop(s);
-                    } else {
-                        printf("balance fail.line: %d col: %d type:%d\n", line, col, type);
-                        return 1;
-                    }
-                    isNote = 0;
+                if (IsEmpty(s)) {
+                    printf("balance fail1.line: %d col: %d type:%d\n", row, col, type);
+                    return 1;
+                } else if (Top(s).type == type) {
+                    Pop(s);
+                } else if (Top(s).priorty <= data.priorty){
+                    printf("balance fail2.line: %d col: %d type:%d\n", row, col, type);
+                    return 1;
                 }
             } else {
-                if (!isNote)
-                    Push(type, s);
-                if (type == 4)
-                    isNote = 1;
+                if (IsEmpty(s) || Top(s).priorty <= data.priorty)
+                    Push(data, s);
             }
+            strLen = data.strLen;
         }
-        if (type == 4) {
-            str += 2;
-            col += 2;
+        if (*str == '\n') {
+            ++row;
+            col = 1;
+        } else if (*str == '\\' && *(str+1)) {
+            strLen = 2;
+            col += strLen;
         } else {
-            if (*str == '\n') {
-                ++line;
-                col = 1;
-            } else {
-                ++col;
-            }
-            ++str;
+            col += strLen;
         }
+        str += strLen;
     }
     if (!IsEmpty(s)) {
-        printf("balance fail: type:%d\n", Top(s));
+
+        printf("balance fail3.line: %d col: %d type:%d\n", Top(s).row, Top(s).col, Top(s).type);
         return 1;
     }
     return 0;
 }
 
-/* (*/
 int BalanceCheck(char* path) {
     FILE* pFile = fopen(path, "r");
     if (!pFile) {
