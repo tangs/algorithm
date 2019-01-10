@@ -4,6 +4,7 @@
 
 struct Node {
     ElementType element;
+    int count;
     Position prev;
     Position next;
 };
@@ -15,6 +16,7 @@ List CreateList(void) {
         return NULL;
     }
     l->element = 0;
+    l->count = 0;
     l->prev = l;
     l->next = l;
     return l;
@@ -49,6 +51,7 @@ void Add(ElementType x, List l) {
         return;
     }
     p->element = x;
+    p->count = 0;
     p->next = l->next;
     p->prev = l;
     l->next->prev = p;
@@ -67,11 +70,19 @@ Position Find(ElementType x, List l) {
         l->next->prev = p;
         l->next = p;
     }
-    return p != l ? p : NULL;
+    if (p != l) {
+        ++p->count;
+        return p;
+    }
+    return NULL;
 }
 
 ElementType Retrieve(Position p) {
     return p->element;
+}
+
+int GetFindCount(Position p) {
+    return p->count;
 }
 
 Position Advance(Position p, List l) {
