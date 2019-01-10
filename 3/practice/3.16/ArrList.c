@@ -42,6 +42,33 @@ Position First(List l) {
     return 0;
 }
 
+void QuickSort(List l) {
+    ElementType* data = l->data;
+    for (int i = 1; i < l->size; ++i) {
+        int tmp = data[i];
+        if (tmp > data[i-1]) continue;
+        int s = 0;
+        int e = i - 1;
+        int idx = e / 2;
+        while (e > s) {
+            if (tmp > data[idx]) {
+                s = idx + 1;
+                idx = (s + e) / 2;
+            } else if (tmp < data[idx]) {
+                e = idx - 1;
+                idx = (s + e) / 2;
+            } else {
+                break;
+            }
+        }
+        idx = tmp > data[idx] ? idx + 1 : idx;
+        for (int j = i; j >= idx; j--) {
+            data[j] = data[j-1];
+        }
+        data[idx] = tmp;
+    }
+}
+
 void Insert(ElementType x, Position p, List l) {
     if (l->size == l->capacity) 
         return;

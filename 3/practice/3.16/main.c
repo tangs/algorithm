@@ -12,14 +12,15 @@ void ShowList(List l) {
 }
 
 int main() {
-    List l = CreateList(100);
+    List l = CreateList(200);
     Position header = Header(l);
-    for (int i = 0; i < 100; ++i) {
-        Insert(rand() % 50, header, l);
+    for (int i = 0; i < 200; ++i) {
+        Insert(rand() % 1000, header, l);
     }
     ShowList(l);
     // O(N^3)
-    DeleteRepeat(l);
+    // DeleteRepeat(l);
+    QuickSort(l);
     ShowList(l);
     return 0;
 }

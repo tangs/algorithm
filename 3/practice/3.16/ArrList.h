@@ -15,6 +15,8 @@ void DisposeList(List l);
 Position Header(List l);
 Position First(List l);
 
+void QuickSort(List l);
+
 void Insert(ElementType x, Position p, List l);
 void Delete(Position p, List l);
 void DeleteRepeat(List l);
