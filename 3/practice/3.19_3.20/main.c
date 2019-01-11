@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "Stack.h"
+#include "LinkedList.h"
 
 struct SymbolInfo {
     char priorty;
