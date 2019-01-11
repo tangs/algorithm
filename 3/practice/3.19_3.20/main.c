@@ -4,13 +4,14 @@
 
 #include "Stack.h"
 
+#define SYMBOL_BIT_RPRI         1       // 1 << 0
+#define SYMBOL_BIT_PAREN        2       // 1 << 1
+#define SYMBOL_BIT_IMM_EXE      4       // 1 << 2
+
 struct SymbolInfo {
     char priorty;
-    char rightPriority;
-    char pushToDest;
-    char pass;
-    char dest;
-    char immediateExe;
+    char pushToSymbol;
+    char bits;
 };
 
 int GetNumber(char *str, int *pNum) {
@@ -35,53 +36,49 @@ struct SymbolInfo GetSymbolInfo(char symbol) {
         case '+':
         case '-':
             info.priorty = 1;
-            info.rightPriority = 0;
             break;
         break;
         case '*':
         case '/':
             info.priorty = 2;
-            info.rightPriority = 0;
             break;
         case '^':
             info.priorty = 3;
-            info.rightPriority = 1;
+            info.bits |= SYMBOL_BIT_RPRI;
             break;
         case '(': 
             info.priorty = 10;
-            info.rightPriority = 1;
-            info.pass = 1;
+            info.bits |= SYMBOL_BIT_RPRI;
+            info.bits |= SYMBOL_BIT_PAREN;
             break;
         case ')':
             info.priorty = 11;
-            info.rightPriority = 0;
-            info.pushToDest = 1;
-            info.dest = '(';
-            info.pass = 1;
-            info.immediateExe = 1;
+            info.pushToSymbol = '(';
+            info.bits |= SYMBOL_BIT_IMM_EXE;
+            info.bits |= SYMBOL_BIT_PAREN;
             break;
     }
     return info;
 }
 
-int Calc(Stack numS, Stack symbolS, char destSymbol) {
-    if (IsEmpty(symbolS)) return 1;
+int Calc(Stack numS, Stack symbolS) {
+    if (IsEmpty(symbolS)) 
+        return 1;
     ElementType symbol = TopAndPop(symbolS);
     struct SymbolInfo info = GetSymbolInfo(symbol.symbol);
-    if (info.pass) {
-        goto ret;
+    if (info.bits & SYMBOL_BIT_PAREN) {
+        return 0;
     }
-    if (IsEmpty(numS)) return 2;
+    if (IsEmpty(numS)) 
+        return 2;
     ElementType num2 = TopAndPop(numS);
-    if (IsEmpty(numS)) return 3;
+    if (IsEmpty(numS)) 
+        return 3;
     ElementType num1 = TopAndPop(numS);
     ElementType data;
     data.type = ELEMENT_TYPE_EXP;
     snprintf(data.str, ELEMENT_STR_LEN, "%s %s %c", num1.str, num2.str, (char)symbol.symbol);
     Push(data, numS);
-ret:
-    if (destSymbol && symbol.symbol != destSymbol)
-        return Calc(numS, symbolS, destSymbol);
     return 0;
 }
 
@@ -111,27 +108,30 @@ int InfixToPost(char *src, char *dest, int len) {
             struct SymbolInfo info = GetSymbolInfo(*pStr);
             if (!info.priorty) 
                 goto error;
+            int isImmExe = info.bits & SYMBOL_BIT_IMM_EXE;
+            int isRPrior = info.bits & SYMBOL_BIT_RPRI;
             int cp = info.priorty;
             while (!IsEmpty(symbolS)) {
                 char lastSymbol = (char)Top(symbolS).num;
                 struct SymbolInfo lInfo = GetSymbolInfo(lastSymbol);
+                int lIsParen = lInfo.bits & SYMBOL_BIT_PAREN;
                 int lp = lInfo.priorty;
-                if (info.immediateExe || (!lInfo.pass && (cp < lp || (cp == lp && !info.rightPriority)))) {
-                    Calc(numS, symbolS, info.dest);
-                    if (info.dest)
+                if (isImmExe || (!lIsParen && (cp < lp || (cp == lp && !isRPrior)))) {
+                    Calc(numS, symbolS);
+                    if (lastSymbol == info.pushToSymbol)
                         break;
                 } else {
                     break;
                 }
             }
-            if (!info.immediateExe)
+            if (!isImmExe)
                 Push(element, symbolS);
         }
 
         pStr += len;
     }
     while (!IsEmpty(symbolS)) {
-        if (Calc(numS, symbolS, 0))
+        if (Calc(numS, symbolS))
             goto error;
     }
     if (IsEmpty(numS)) {
