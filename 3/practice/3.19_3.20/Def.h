@@ -6,10 +6,12 @@
 #define ELEMENT_TYPE_EXP 2
 #define ELEMENT_TYPE_SYMBOL 3
 
+#define ELEMENT_STR_LEN 256
+
 struct Element {
     int num;
     int type;
-    char str[256];
+    char str[ELEMENT_STR_LEN];
 };
 
 typedef struct Element ElementType;

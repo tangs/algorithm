@@ -59,32 +59,30 @@ struct SymbolInfo GetSymbolInfo(char symbol) {
     return info;
 }
 
-int Calc(Stack numS, Stack symbolS, List destL, char destSymbol) {
+int Calc(Stack numS, Stack symbolS, char destSymbol) {
     if (IsEmpty(symbolS)) return 1;
     ElementType symbol = TopAndPop(symbolS);
     struct SymbolInfo info = GetSymbolInfo(symbol.num);
     if (info.pass) {
         if (info.dest != destSymbol)
-            return Calc(numS, symbolS, destL, info.dest);
+            return Calc(numS, symbolS, info.dest);
         return 0;
     }
     if (IsEmpty(numS)) return 2;
     ElementType num2 = TopAndPop(numS);
-    int isFirst = List_IsEmpty(destL);
-    List_Append(symbol, destL);
-    List_AddToHead(num2, destL);
-    if (isFirst) {
-        if (IsEmpty(numS)) return 3;
-        ElementType num1 = TopAndPop(numS);
-        List_AddToHead(num1, destL);
-    }
+    if (IsEmpty(numS)) return 3;
+    ElementType num1 = TopAndPop(numS);
+    ElementType data;
+    data.type = ELEMENT_TYPE_EXP;
+    snprintf(data.str, ELEMENT_STR_LEN, "%s %s %c", num1.str, num2.str, (char)symbol.num);
+    Push(data, numS);
     return 0;
 }
 
 int InfixToPost(char *src, char *dest, int len) {
     Stack numS = CreateStack();
     Stack symbolS = CreateStack();
-    List destL = List_Create();
+    // List destL = List_Create();
     int ret = 0;
     char *pStr = src;
     while (*pStr) {
@@ -96,11 +94,11 @@ int InfixToPost(char *src, char *dest, int len) {
         int num;
         len = GetNumber(pStr, &num);
         if (len) {
-            ElementType element;
-            element.num = num;
-            // strcpy(element.str, "%d", num);
-            element.type = ELEMENT_TYPE_NUM;
-            Push(element, numS);
+            ElementType data;
+            // data.num = num;
+            snprintf(data.str, ELEMENT_STR_LEN, "%d", num);
+            data.type = ELEMENT_TYPE_EXP;
+            Push(data, numS);
         } else {
             len = 1;
             ElementType element;
@@ -108,53 +106,38 @@ int InfixToPost(char *src, char *dest, int len) {
             element.type = ELEMENT_TYPE_SYMBOL;
             struct SymbolInfo info = GetSymbolInfo(*pStr);
             if (!info.priorty) goto error;
-            if (IsEmpty(symbolS)) {
-                Push(element, symbolS);
-            } else {
+            while (!IsEmpty(symbolS)) {
                 char lastSymbol = (char)Top(symbolS).num;
                 struct SymbolInfo lInfo = GetSymbolInfo(lastSymbol);
-                Push(element, symbolS);
                 int cp = info.priorty;
-                int lp = info.priorty;
-                if(cp < lp || (cp == lp && !info.rightPriority)) {
-                    Calc(numS, symbolS, destL, 0);
+                int lp = lInfo.priorty;
+                if (cp < lp || (cp == lp && !info.rightPriority)) {
+                    Calc(numS, symbolS, 0);
+                } else {
+                    break;
                 }
             }
+            Push(element, symbolS);
         }
 
         pStr += len;
     }
     while (!IsEmpty(symbolS)) {
-        if (Calc(numS, symbolS, destL, 0))
+        if (Calc(numS, symbolS, 0))
             goto error;
     }
-    ListPos p = List_First(destL);
-    char *pDest = dest;
-    while (!List_IsHeader(p, destL)) {
-        ElementType data = List_Retrieve(p, destL);
-        switch (data.type) {
-            case ELEMENT_TYPE_NUM: {
-                int len1 = snprintf(pDest, len - (pDest - dest), "%d ", data.num);
-                pDest += len1;
-            }
-            break;
-            case ELEMENT_TYPE_SYMBOL: {
-                int len1 = snprintf(pDest, len - (pDest - dest), "%c ", data.num);
-                pDest += len1;
-            }
-            break;
-            default:
-                goto error;
-        }
-        p = List_Advance(p, destL);
+    if (IsEmpty(numS)) {
+        goto error;
     }
+    ElementType data = TopAndPop(numS);
+    strcpy(dest, data.str);
     goto ret;
 error:
     printf("infix to post error.\n");
 ret:
     DisposeStack(numS);
     DisposeStack(symbolS);
-    List_DisposeList(destL);
+    // List_DisposeList(destL);
     return ret;
 }
 
@@ -221,9 +204,8 @@ int main(int argc, char **argv) {
     const int LEN = 512;
     char tmp[LEN];
     for (int i = 1; i < argc; i++) {
-        // printf("%s=%d\n", argv[i], CalcPostExp(argv[i]));
         InfixToPost(argv[i], tmp, LEN);
-        printf("src:%s\ndest:%s\nret:%d\n\n", argv[i], tmp, CalcPostExp(tmp), CalcPostExp(tmp));
+        printf("src:%s\ndest:%s\nret:%d\n\n", argv[i], tmp, CalcPostExp(tmp));
     }
     return 0;
 }
