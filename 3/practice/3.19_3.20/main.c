@@ -12,6 +12,7 @@ struct SymbolInfo {
     char pass;
     char dest;
     char immediateExe;
+    // char isBrackets;
 };
 
 int GetNumber(char *str, int *pNum) {
@@ -48,6 +49,7 @@ struct SymbolInfo GetSymbolInfo(char symbol) {
             info.priorty = 10;
             info.rightPriority = 1;
             info.pass = 1;
+            // info.isBrackets = 1;
             break;
         case ')':
             info.priorty = 11;
@@ -56,6 +58,7 @@ struct SymbolInfo GetSymbolInfo(char symbol) {
             info.dest = '(';
             info.pass = 1;
             info.immediateExe = 1;
+            // info.isBrackets = 1;
             break;
     }
     return info;
@@ -66,9 +69,7 @@ int Calc(Stack numS, Stack symbolS, char destSymbol) {
     ElementType symbol = TopAndPop(symbolS);
     struct SymbolInfo info = GetSymbolInfo(symbol.num);
     if (info.pass) {
-        if (info.dest != destSymbol)
-            return Calc(numS, symbolS, info.dest);
-        return 0;
+        goto ret;
     }
     if (IsEmpty(numS)) return 2;
     ElementType num2 = TopAndPop(numS);
@@ -78,6 +79,9 @@ int Calc(Stack numS, Stack symbolS, char destSymbol) {
     data.type = ELEMENT_TYPE_EXP;
     snprintf(data.str, ELEMENT_STR_LEN, "%s %s %c", num1.str, num2.str, (char)symbol.num);
     Push(data, numS);
+ret:
+    if (destSymbol && symbol.num != destSymbol)
+        return Calc(numS, symbolS, destSymbol);
     return 0;
 }
 
@@ -115,6 +119,8 @@ int InfixToPost(char *src, char *dest, int len) {
                 int lp = lInfo.priorty;
                 if (info.immediateExe || (!lInfo.pass && (cp < lp || (cp == lp && !info.rightPriority)))) {
                     Calc(numS, symbolS, info.dest);
+                    if (info.dest)
+                        break;
                 } else {
                     break;
                 }
