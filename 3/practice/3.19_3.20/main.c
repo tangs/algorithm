@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "Stack.h"
-// #include "LinkedList.h"
 
 struct SymbolInfo {
     char priorty;
@@ -12,7 +11,6 @@ struct SymbolInfo {
     char pass;
     char dest;
     char immediateExe;
-    // char isBrackets;
 };
 
 int GetNumber(char *str, int *pNum) {
@@ -45,11 +43,14 @@ struct SymbolInfo GetSymbolInfo(char symbol) {
             info.priorty = 2;
             info.rightPriority = 0;
             break;
+        case '^':
+            info.priorty = 3;
+            info.rightPriority = 1;
+            break;
         case '(': 
             info.priorty = 10;
             info.rightPriority = 1;
             info.pass = 1;
-            // info.isBrackets = 1;
             break;
         case ')':
             info.priorty = 11;
@@ -58,7 +59,6 @@ struct SymbolInfo GetSymbolInfo(char symbol) {
             info.dest = '(';
             info.pass = 1;
             info.immediateExe = 1;
-            // info.isBrackets = 1;
             break;
     }
     return info;
@@ -111,7 +111,8 @@ int InfixToPost(char *src, char *dest, int len) {
             element.num = *pStr;
             element.type = ELEMENT_TYPE_SYMBOL;
             struct SymbolInfo info = GetSymbolInfo(*pStr);
-            if (!info.priorty) goto error;
+            if (!info.priorty) 
+                goto error;
             int cp = info.priorty;
             while (!IsEmpty(symbolS)) {
                 char lastSymbol = (char)Top(symbolS).num;
