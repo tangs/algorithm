@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/main",
-            "args": ["1+2*3-4"],
+            "args": ["5 + ((1 + 2) * 4) - 3"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

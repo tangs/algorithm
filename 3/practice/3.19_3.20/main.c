@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "Stack.h"
-#include "LinkedList.h"
+// #include "LinkedList.h"
 
 struct SymbolInfo {
     char priorty;
@@ -11,6 +11,7 @@ struct SymbolInfo {
     char pushToDest;
     char pass;
     char dest;
+    char immediateExe;
 };
 
 int GetNumber(char *str, int *pNum) {
@@ -54,6 +55,7 @@ struct SymbolInfo GetSymbolInfo(char symbol) {
             info.pushToDest = 1;
             info.dest = '(';
             info.pass = 1;
+            info.immediateExe = 1;
             break;
     }
     return info;
@@ -106,18 +108,19 @@ int InfixToPost(char *src, char *dest, int len) {
             element.type = ELEMENT_TYPE_SYMBOL;
             struct SymbolInfo info = GetSymbolInfo(*pStr);
             if (!info.priorty) goto error;
+            int cp = info.priorty;
             while (!IsEmpty(symbolS)) {
                 char lastSymbol = (char)Top(symbolS).num;
                 struct SymbolInfo lInfo = GetSymbolInfo(lastSymbol);
-                int cp = info.priorty;
                 int lp = lInfo.priorty;
-                if (cp < lp || (cp == lp && !info.rightPriority)) {
-                    Calc(numS, symbolS, 0);
+                if (info.immediateExe || (!lInfo.pass && (cp < lp || (cp == lp && !info.rightPriority)))) {
+                    Calc(numS, symbolS, info.dest);
                 } else {
                     break;
                 }
             }
-            Push(element, symbolS);
+            if (!info.immediateExe)
+                Push(element, symbolS);
         }
 
         pStr += len;
