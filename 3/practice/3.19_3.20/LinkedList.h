@@ -17,7 +17,7 @@ ListPos List_Header(List l);
 ListPos List_First(List l);
 
 int List_IsEmpty(List l);
-int List_IsHeader(List l);
+int List_IsHeader(ListPos p, List l);
 
 void List_Append(ElementType element, List l);
 void List_AddToHead(ElementType element, List l);

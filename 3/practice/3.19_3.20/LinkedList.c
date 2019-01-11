@@ -25,10 +25,10 @@ void List_MakeEmpty(List l) {
     while (p != l) {
         tmp = p;
         p = p->next;
-        free(p);
+        free(tmp);
     }
-    p->next = p;
-    p->prev = p;
+    l->next = l;
+    l->prev = l;
 }
 
 void List_DisposeList(List l) {
@@ -48,8 +48,8 @@ int List_IsEmpty(List l) {
     return l == l->next;
 }
 
-int List_IsHeader(List l) {
-    return l == l->next;
+int List_IsHeader(ListPos p, List l) {
+    return l == p;
 }
 
 static void List_Insert(ListPos pos, ElementType element, List l) {
@@ -59,12 +59,11 @@ static void List_Insert(ListPos pos, ElementType element, List l) {
         return;
     }
     p->element = element;
-    ListPos prev = pos->prev;
     ListPos next = pos->next;
-    prev->next = p;
+    pos->next = p;
     next->prev = p;
     p->next = next;
-    p->prev = prev;
+    p->prev = pos;
 }
 
 void List_Append(ElementType element, List l) {
@@ -76,9 +75,9 @@ void List_AddToHead(ElementType element, List l) {
 }
 
 ElementType List_Retrieve(ListPos p, List l) {
-    return l->element;
+    return p->element;
 }
 
 ListPos List_Advance(ListPos p, List l) {
-    return l->next;
+    return p->next;
 }
