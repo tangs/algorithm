@@ -67,7 +67,7 @@ struct SymbolInfo GetSymbolInfo(char symbol) {
 int Calc(Stack numS, Stack symbolS, char destSymbol) {
     if (IsEmpty(symbolS)) return 1;
     ElementType symbol = TopAndPop(symbolS);
-    struct SymbolInfo info = GetSymbolInfo(symbol.num);
+    struct SymbolInfo info = GetSymbolInfo(symbol.symbol);
     if (info.pass) {
         goto ret;
     }
@@ -77,10 +77,10 @@ int Calc(Stack numS, Stack symbolS, char destSymbol) {
     ElementType num1 = TopAndPop(numS);
     ElementType data;
     data.type = ELEMENT_TYPE_EXP;
-    snprintf(data.str, ELEMENT_STR_LEN, "%s %s %c", num1.str, num2.str, (char)symbol.num);
+    snprintf(data.str, ELEMENT_STR_LEN, "%s %s %c", num1.str, num2.str, (char)symbol.symbol);
     Push(data, numS);
 ret:
-    if (destSymbol && symbol.num != destSymbol)
+    if (destSymbol && symbol.symbol != destSymbol)
         return Calc(numS, symbolS, destSymbol);
     return 0;
 }
@@ -88,7 +88,6 @@ ret:
 int InfixToPost(char *src, char *dest, int len) {
     Stack numS = CreateStack();
     Stack symbolS = CreateStack();
-    // List destL = List_Create();
     int ret = 0;
     char *pStr = src;
     while (*pStr) {
@@ -101,14 +100,13 @@ int InfixToPost(char *src, char *dest, int len) {
         len = GetNumber(pStr, &num);
         if (len) {
             ElementType data;
-            // data.num = num;
             snprintf(data.str, ELEMENT_STR_LEN, "%d", num);
             data.type = ELEMENT_TYPE_EXP;
             Push(data, numS);
         } else {
             len = 1;
             ElementType element;
-            element.num = *pStr;
+            element.symbol = *pStr;
             element.type = ELEMENT_TYPE_SYMBOL;
             struct SymbolInfo info = GetSymbolInfo(*pStr);
             if (!info.priorty) 
@@ -147,7 +145,6 @@ error:
 ret:
     DisposeStack(numS);
     DisposeStack(symbolS);
-    // List_DisposeList(destL);
     return ret;
 }
 

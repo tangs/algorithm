@@ -9,9 +9,12 @@
 #define ELEMENT_STR_LEN 256
 
 struct Element {
-    int num;
     int type;
-    char str[ELEMENT_STR_LEN];
+    union {
+        int num;
+        char symbol;
+        char str[ELEMENT_STR_LEN];
+    };
 };
 
 typedef struct Element ElementType;
