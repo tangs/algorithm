@@ -1,13 +1,13 @@
 #ifndef _Stack_h
 #define _Stack_h
 
+#include "Def.h"
+
 struct Node;
 
 typedef struct Node *PtrToNode;
 typedef PtrToNode Position;
 typedef PtrToNode Stack;
-
-typedef int ElementType;
 
 Stack CreateStack(void);
 void MakeEmpty(Stack s);

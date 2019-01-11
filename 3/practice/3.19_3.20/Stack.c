@@ -13,7 +13,6 @@ Stack CreateStack(void) {
         // out of memory.
         return NULL;
     }
-    s->element = 0;
     s->next = NULL;
     return s;
 }
@@ -58,17 +57,23 @@ void Pop(Stack s) {
 
 ElementType Top(Stack s) {
     Position p = s->next;
-    if (!p)
+    if (!p) {
         // stack is empty.
-        return 0;
+        ElementType data;
+        data.type = -1;
+        return data;
+    }
     return p->element;
 }
 
 ElementType TopAndPop(Stack s) {
     Position p = s->next;
-    if (!p)
+    if (!p) {
         // stack is empty.
-        return 0;
+        ElementType data;
+        data.type = -1;
+        return data;
+    }
     ElementType x = p->element;
     s->next = p->next;
     free(p);

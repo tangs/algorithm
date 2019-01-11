@@ -1,7 +1,16 @@
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 #include "Stack.h"
+
+struct SymbolInfo {
+    char priorty;
+    char rightPriority;
+    char pushToDest;
+    char pass;
+    char dest;
+};
 
 int GetNumber(char *str, int *pNum) {
     *pNum = 0;
@@ -18,6 +27,106 @@ int GetNumber(char *str, int *pNum) {
     return pStr - str;
 }
 
+struct SymbolInfo GetSymbolInfo(char symbol) {
+    struct SymbolInfo info;
+    memset(&info, 0, sizeof(struct SymbolInfo));
+    switch (symbol) {
+        case '+':
+        case '-':
+            info.priorty = 1;
+            info.rightPriority = 0;
+            break;
+        break;
+        case '*':
+        case '/':
+            info.priorty = 2;
+            info.rightPriority = 0;
+            break;
+        case '(': 
+            info.priorty = 10;
+            info.rightPriority = 1;
+            info.pass = 1;
+            break;
+        case ')':
+            info.priorty = 11;
+            info.rightPriority = 0;
+            info.pushToDest = 1;
+            info.dest = '(';
+            info.pass = 1;
+            break;
+    }
+    return info;
+}
+
+int Calc(Stack numS, Stack symbolS, Stack destS, char destSymbol) {
+    if (IsEmpty(symbolS)) return 1;
+    ElementType symbol = TopAndPop(symbolS);
+    struct SymbolInfo info = GetSymbolInfo(symbol.num);
+    if (info.pass) {
+        if (info.dest != destSymbol)
+            Calc(numS, symbolS, destS, info.dest);
+        return 0;
+    }
+    if (IsEmpty(numS)) return 2;
+    ElementType num2 = TopAndPop(numS);
+    if (IsEmpty(numS)) return 3;
+    ElementType num1 = TopAndPop(numS);
+    // Push()
+    return 0;
+}
+
+int InfixToPost(char *src, char *dest, int len) {
+    Stack numS = CreateStack();
+    Stack symbolS = CreateStack();
+    Stack destS = CreateStack();
+    int ret = 0;
+    char *pStr = src;
+    while (*pStr) {
+        if (*pStr == ' ') {
+            pStr++;
+            continue;
+        }
+        int len = 1;
+        int num;
+        len = GetNumber(pStr, &num);
+        if (len) {
+            ElementType element;
+            element.num = num;
+            element.type = 0;
+            Push(element, numS);
+        } else {
+            len = 1;
+            ElementType element;
+            element.num = *pStr;
+            element.type = 1;
+            struct SymbolInfo info = GetSymbolInfo(*pStr);
+            if (!info.priorty) goto error;
+            if (IsEmpty(symbolS)) {
+                Push(element, symbolS);
+            } else {
+                char lastSymbol = (char)Top(symbolS).num;
+                struct SymbolInfo lInfo = GetSymbolInfo(lastSymbol);
+                Push(element, symbolS);
+                int cp = info.priorty;
+                int lp = info.priorty;
+                if(cp < lp || (cp == lp && !info.rightPriority)) {
+                    Calc(numS, symbolS, destS, 0);
+                }
+            }
+        }
+
+        pStr += len;
+    }
+    goto ret;
+error:
+    printf("infix to post error.\n");
+ret:
+    DisposeStack(numS);
+    DisposeStack(symbolS);
+    DisposeStack(destS);
+    return ret;
+}
+
 int CalcPostExp(char *str) {
     int ret = 0;
     Stack s = CreateStack();
@@ -30,12 +139,16 @@ int CalcPostExp(char *str) {
         int num;
         int len = GetNumber(pStr, &num);
         if (len > 0) {
-            Push(num, s);
+            ElementType element;
+            element.num = num;
+            element.type = 0;
+            Push(element, s);
         } else {
+            len = 1;
             if (IsEmpty(s)) goto error;
-            int num2 = TopAndPop(s);
+            int num2 = TopAndPop(s).num;
             if (IsEmpty(s)) goto error;
-            int num1 = TopAndPop(s);
+            int num1 = TopAndPop(s).num;
             int num = 0;
             switch (*pStr) {
                 case '+':
@@ -57,13 +170,14 @@ int CalcPostExp(char *str) {
                     printf("err symbol %c.\n", *pStr);
                 goto error;
             }
-            Push(num, s);
-            len = 1;
+            ElementType element;
+            element.num = num;
+            Push(element, s);
         }
         pStr += len;
     } 
     if (IsEmpty(s)) goto error;
-    ret = TopAndPop(s);
+    ret = TopAndPop(s).num;
     goto ret;
 error:
     printf("err.\n");
