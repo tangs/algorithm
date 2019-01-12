@@ -5,10 +5,9 @@
 
 struct Node {
     int capacity;
-    int headSize;
-    int tailSize;
-    ElementType* data;
+    StackPos head;
     StackPos tail;
+    ElementType* data;
 };
 
 Stack Stack_Create(int capacity) {
@@ -18,18 +17,57 @@ Stack Stack_Create(int capacity) {
         // out of memory.
         return NULL;
     }
-    memset(s, 0, size);
     s->capacity = capacity;
     s->data = malloc(sizeof(ElementType) * capacity);
+    s->head = 0;
+    s->tail = capacity - 1;
     return s;
 }
 
-Stack Stack_GetTail(Stack s);
+void Stack_MakeEmpty(Stack s, int isHead) {
+    if (isHead)
+        s->head = 0;
+    else
+        s->tail = s->capacity - 1;
+}
+void Stack_Dispose(Stack s) {
+    free(s->data);
+    free(s);
+}
 
-void Stack_MakeEmpty(Stack s);
-void Stack_Dispose(Stack s);
+int Stack_IsEmpty(Stack s, int isHead) {
+    return isHead ? s->head == 0 : s->tail == s->capacity - 1;
+}
 
-void Stack_Push(ElementType x, Stack s);
-void Stack_Pop(Stack s);
-ElementType Top(Stack s);
-ElementType TopAndPop(Stack s);
+int Stack_Push(ElementType x, Stack s, int isHead) {
+    if (s->head > s->tail) {
+        // stack is full.
+        return 0;
+    }
+    int idx = isHead ? s->head++ : s->tail--;
+    s->data[idx] = x;
+    return 1;
+}
+
+void Stack_Pop(Stack s, int isHead) {
+    if (Stack_IsEmpty(s, isHead))
+        // stack is empty.
+        return;
+    isHead ? s->head-- : s->tail++;
+}
+
+ElementType Stack_Top(Stack s, int isHead) {
+    if (Stack_IsEmpty(s, isHead))
+        // stack is empty.
+        return DEF_ELEMENT;
+    int idx = isHead ? s->head - 1 : s->tail + 1;
+    return s->data[idx];
+}
+
+ElementType Stack_TopAndPop(Stack s, int isHead) {
+    if (Stack_IsEmpty(s, isHead))
+        // stack is empty.
+        return DEF_ELEMENT;
+    int idx = isHead ? --s->head : ++s->tail;
+    return s->data[idx];
+}

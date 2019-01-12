@@ -6,18 +6,19 @@
 struct Node;
 
 typedef struct Node *PtrToNode;
-typedef PtrToNode StackPos;
+typedef int StackPos;
 typedef PtrToNode Stack;
 
 Stack Stack_Create(int capacity);
-Stack Stack_GetTail(Stack s);
 
-void Stack_MakeEmpty(Stack s);
+void Stack_MakeEmpty(Stack s, int isHead);
 void Stack_Dispose(Stack s);
 
-void Stack_Push(ElementType x, Stack s);
-void Stack_Pop(Stack s);
-ElementType Top(Stack s);
-ElementType TopAndPop(Stack s);
+int Stack_IsEmpty(Stack s, int isHead);
+
+int Stack_Push(ElementType x, Stack s, int isHead);
+void Stack_Pop(Stack s, int isHead);
+ElementType Stack_Top(Stack s, int isHead);
+ElementType Stack_TopAndPop(Stack s, int isHead);
 
 #endif // _Strack_h
