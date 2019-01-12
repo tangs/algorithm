@@ -2,8 +2,6 @@
 
 #include <stdlib.h>
 
-#include <stack.h>
-
 struct Stack_Node {
     ElementType element;
     PtrToNode next;
