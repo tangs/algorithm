@@ -1,9 +1,9 @@
-#include "Queue.h"
+#include "ArrQueue.h"
 
 #include <stdio.h>
 
 int main() {
-    Queue q = Queue_Create();
+    Queue q = Queue_Create(99);
     for (int i = 0; i < 100; ++i) {
         Queue_Enqueue(i, q);
     }
