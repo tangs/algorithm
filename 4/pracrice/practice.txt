@@ -1,3 +1,74 @@
 4.1:
     a.A 
     b.G H I L M K
+4.2
+    a.  child->parent
+        A->
+        B->A 
+        C->A 
+        D->B 
+        E->D 
+        F->C 
+        G->D 
+        H->D
+        I->E
+        J->E
+        K->F
+        L->J
+        M->J
+    b.  parent->children
+        A->B C
+        B->D E
+        C->F
+        D->G H
+        E->I J
+        F->K
+        G->
+        H->
+        I->
+        J->L M
+        K->
+        L->
+        M->
+    c.  node->siblings
+        A->
+        B->C 
+        C->B 
+        D->E
+        F->
+        G->H
+        H->G
+        I->J
+        J->I
+        K->
+        L->M
+        M->L
+    d.  node->depth
+        A->0
+        B->1
+        C->1
+        D->2
+        E->2
+        F->2
+        G->3
+        H->3
+        I->3
+        J->3
+        K->3
+        L->4
+        M->4
+    e.  node->height
+        A->4
+        B->3
+        C->2
+        D->1
+        E->2
+        F->1
+        G->0
+        H->0
+        I->0
+        J->1
+        K->0
+        L->0
+        M->0
+        
