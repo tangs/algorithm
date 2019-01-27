@@ -18,32 +18,28 @@ SearchTree Tree_MakeEmpty(SearchTree t) {
 }
 
 Tree_Pos Tree_Find(ElementType x, SearchTree t) {
-    if (t == NULL) {
+    if (t == NULL)
         return NULL;
-    }
-    if (t == x) {
-        return t;
-    } else if (x < t->element) {
+    if (x > t->element)
+        return Tree_Find(x, t->right);
+    if (x < t->element)
         return Tree_Find(x, t->left);
-    }
-    return Tree_Find(x, t->right);
+    return t;
 }
 
 Tree_Pos Tree_FindMin(SearchTree t) {
-    if (t == NULL) {
+    if (t == NULL) 
         return NULL;
-    } else if (t->left) {
+    if (t->left)
         return Tree_FindMin(t->left);
-    }
     return t;
 }
 
 Tree_Pos Tree_FindMax(SearchTree t) {
-    if (t == NULL) {
+    if (t == NULL)
         return NULL;
-    } else if (t->right) {
+    if (t->right) {
         return Tree_FindMin(t->right);
-    }
     return t;
 }
 
