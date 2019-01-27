@@ -1,6 +1,7 @@
 #include "Tree.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 struct Tree_Node {
     ElementType element;
@@ -42,35 +43,38 @@ Tree_Pos Tree_FindMax(SearchTree t) {
     return t;
 }
 
-SearchTree Insert(ElementType x, SearchTree t) {
-    if (t == NULL)
-        return NULL;
+SearchTree Tree_Insert(ElementType x, SearchTree t) {
+    if (t == NULL) {
+        SearchTree tree = malloc(sizeof(struct Tree_Node));
+        if (tree == NULL)
+            // out of memory.
+            return NULL;
+        tree->left = NULL;
+        tree->right = NULL;
+        tree->element = x;
+        return tree;
+    }
     if (x == t->element)
         return t;
     if (x < t->element)
-        if (t->left != NULL)
-            return Insert(x, t->left);
-        else {
-            SearchTree tree = malloc(sizeof(struct Tree_Node));
-            tree->left = NULL;
-            tree->right = NULL;
-            tree->element = x;
-            t->left = tree;
-            return tree;
-        }
-    if (x > t->element)
-        if (t->right != NULL)
-            return Insert(x, t->right);
-        else {
-            SearchTree tree = malloc(sizeof(struct Tree_Node));
-            tree->right = NULL;
-            tree->right = NULL;
-            tree->element = x;
-            t->right = tree;
-            return tree;
-        }
+        t->left = Tree_Insert(x, t->left);
+    else if (x > t->element)
+        t->right = Tree_Insert(x, t->right);
     return t;
 }
 
-SearchTree Delete(ElementType x, SearchTree t);
-ElementType Retrieve(Tree_Pos p);
+SearchTree Tree_Delete(ElementType x, SearchTree t);
+
+ElementType Tree_Retrieve(Tree_Pos p) {
+    if (p == NULL)
+        return 0;
+    return p->element;
+}
+
+void Tree_Prints(SearchTree t) {
+    if (t == NULL)
+        return;
+    Tree_Prints(t->left);
+    printf("%d\n", t->element);
+    Tree_Prints(t->right);
+}

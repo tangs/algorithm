@@ -11,8 +11,9 @@ SearchTree Tree_MakeEmpty(SearchTree t);
 Tree_Pos Tree_Find(ElementType x, SearchTree t);
 Tree_Pos Tree_FindMin(SearchTree t);
 Tree_Pos Tree_FindMax(SearchTree t);
-SearchTree Insert(ElementType x, SearchTree t);
-SearchTree Delete(ElementType x, SearchTree t);
-ElementType Retrieve(Tree_Pos p);
+SearchTree Tree_Insert(ElementType x, SearchTree t);
+SearchTree Tree_Delete(ElementType x, SearchTree t);
+ElementType Tree_Retrieve(Tree_Pos p);
+void Tree_Prints(SearchTree t);
 
 #endif // _Tree_h
