@@ -63,7 +63,24 @@ SearchTree Tree_Insert(ElementType x, SearchTree t) {
     return t;
 }
 
-SearchTree Tree_Delete(ElementType x, SearchTree t);
+SearchTree Tree_Delete(ElementType x, SearchTree t) {
+    if (t == NULL)
+        return NULL;
+    if (x < t->element)
+        t->left = Tree_Delete(x, t->left);
+    else if (x > t->element)
+        t->right = Tree_Delete(x, t->right);
+    else if (t->left && t->right) {
+        SearchTree tmp = Tree_FindMin(t->right);
+        t->element = tmp->element;
+        t->right = Tree_Delete(tmp->element, t->right);
+    } else {
+        SearchTree tmp = t->left ? t->left : t->right;
+        free(t);
+        return tmp;
+    }
+    return t;
+}
 
 ElementType Tree_Retrieve(Tree_Pos p) {
     if (p == NULL)
