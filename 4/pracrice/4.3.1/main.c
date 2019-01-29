@@ -19,10 +19,10 @@ int main() {
     //     int num = rand() % 100;
     //     Tree_Insert(num, t);
     // }
-    Tree_Prints(t);
-    printf("\n");
+    Tree_Prints(t, 0);
+    printf("\n\n\n");
     t = Tree_Delete(8, t);
-    Tree_Prints(t);
-    printf("\n");
+    Tree_Prints(t, 0);
+    printf("\n\n\n");
     return 0;
 }

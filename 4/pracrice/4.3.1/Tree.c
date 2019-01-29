@@ -88,10 +88,12 @@ ElementType Tree_Retrieve(Tree_Pos p) {
     return p->element;
 }
 
-void Tree_Prints(SearchTree t) {
+void Tree_Prints(SearchTree t, int dp) {
     if (t == NULL)
         return;
-    Tree_Prints(t->left);
+    Tree_Prints(t->left, dp + 1);
+    for (int i = 0; i < dp; ++i)
+        printf("\t");
     printf("%d\n", t->element);
-    Tree_Prints(t->right);
+    Tree_Prints(t->right, dp + 1);
 }
