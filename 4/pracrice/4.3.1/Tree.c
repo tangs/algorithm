@@ -55,8 +55,8 @@ int Tree_UpdteDp(SearchTree t) {
     if (t == NULL) {
         return -1;
     }
-    int lDp = Tree_UpdteDp(t->left);
-    int rDp = Tree_UpdteDp(t->right);
+    int lDp = Tree_GetDp(t->left);
+    int rDp = Tree_GetDp(t->right);
     t->dp = (lDp > rDp ? lDp : rDp) + 1;
     return t->dp;
 }
@@ -91,8 +91,8 @@ SearchTree Tree_Insert(ElementType x, SearchTree t) {
                 // case 1
                 t->left = left->right;
                 left->right = t;
-                // Tree_UpdteDp(t);
-                // Tree_UpdteDp(left);
+                Tree_UpdteDp(t);
+                Tree_UpdteDp(left);
                 return left;
             } else {
                 // case 2
@@ -101,9 +101,9 @@ SearchTree Tree_Insert(ElementType x, SearchTree t) {
                 t->left = tmp->right;
                 tmp->left = left;
                 tmp->right = t;
-                // Tree_UpdteDp(left);
-                // Tree_UpdteDp(right);
-                // Tree_UpdteDp(tmp);
+                Tree_UpdteDp(left);
+                Tree_UpdteDp(t);
+                Tree_UpdteDp(tmp);
                 return tmp;
             }
         } else {
@@ -114,16 +114,16 @@ SearchTree Tree_Insert(ElementType x, SearchTree t) {
                 t->right = tmp->left;
                 tmp->right = right;
                 tmp->left = t;
-                // Tree_UpdteDp(left);
-                // Tree_UpdteDp(right);
-                // Tree_UpdteDp(tmp);
+                Tree_UpdteDp(right);
+                Tree_UpdteDp(t);
+                Tree_UpdteDp(tmp);
                 return tmp;
             } else {
                 // case 4
                 t->right = right->left;
                 right->left = t;
-                // Tree_UpdteDp(t);
-                // Tree_UpdteDp(right);
+                Tree_UpdteDp(t);
+                Tree_UpdteDp(right);
                 return right;
             }
         }
