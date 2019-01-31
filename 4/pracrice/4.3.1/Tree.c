@@ -61,7 +61,86 @@ int Tree_UpdteHeight(SearchTree t) {
     return t->height;
 }
 
+SearchTree Tree_SingleRotateWithLeft(SearchTree t) {
+    SearchTree left = t->left;
+    t->left = left->right;
+    left->right = t;
+    Tree_UpdteHeight(t);
+    Tree_UpdteHeight(left);
+    return left;
+}
+
+SearchTree Tree_SingleRotateWithRight(SearchTree t) {
+    SearchTree right = t->right;
+    t->right = right->left;
+    right->left = t;
+    Tree_UpdteHeight(t);
+    Tree_UpdteHeight(right);
+    return right;
+}
+
+SearchTree Tree_DoubleRotateWithLeft(SearchTree t) {
+    SearchTree left = t->left;
+    SearchTree leftRight = left->right;
+    t->left = leftRight->right;
+    left->right = leftRight->left;
+    leftRight->left = left;
+    leftRight->right = t;
+    Tree_UpdteHeight(t);
+    Tree_UpdteHeight(left);
+    Tree_UpdteHeight(leftRight);
+    return leftRight;
+}
+
+SearchTree Tree_DoubleRotateWithRight(SearchTree t) {
+    SearchTree right = t->right;
+    SearchTree rightLeft = right->left;
+    t->right = rightLeft->left;
+    right->left = rightLeft->right;
+    rightLeft->right = right;
+    rightLeft->left = t;
+    Tree_UpdteHeight(t);
+    Tree_UpdteHeight(right);
+    Tree_UpdteHeight(rightLeft);
+    return rightLeft;
+}
+
 SearchTree Tree_Insert(ElementType x, SearchTree t) {
+    if (t == NULL) {
+        SearchTree tree = malloc(sizeof(struct Tree_Node));
+        if (tree == NULL)
+            // out of memory.
+            return NULL;
+        tree->left = NULL;
+        tree->right = NULL;
+        tree->element = x;
+        tree->height = 0;
+        return tree;
+    }
+    if (x < t->element) {
+        t->left = Tree_Insert(x, t->left);
+        if (Tree_GetHeight(t->left) - Tree_GetHeight(t->right) == 2) {
+            if (x < t->left->element) {
+                t = Tree_SingleRotateWithLeft(t);
+            } else {
+                t = Tree_DoubleRotateWithLeft(t);
+            }
+        }
+    } else if (x > t->element) {
+        t->right = Tree_Insert(x, t->right);
+        if (Tree_GetHeight(t->right) - Tree_GetHeight(t->left) == 2) {
+            if (x > t->right->element) {
+                t = Tree_SingleRotateWithRight(t);
+            } else {
+                t = Tree_DoubleRotateWithRight(t);
+            }
+        }
+    }
+    Tree_UpdteHeight(t);
+    return t;
+}
+
+SearchTree Tree_Insert1(ElementType x, SearchTree t) {
     if (t == NULL) {
         SearchTree tree = malloc(sizeof(struct Tree_Node));
         if (tree == NULL)
