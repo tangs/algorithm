@@ -17,9 +17,9 @@ int main() {
     t = Tree_Insert(30, t);
     t = Tree_Insert(15, t);
     t = Tree_Insert(5, t);
-    for (int i = 0; i < 200; ++i) {
-        int num = rand() % 100;
-        Tree_Insert(num, t);
+    for (int i = 0; i < 1000; ++i) {
+        int num = i % 1000;
+        t = Tree_Insert(num, t);
     }
     Tree_Prints(t, 0);
     // printf("\n\n\n");
