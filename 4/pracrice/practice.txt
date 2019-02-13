@@ -107,4 +107,9 @@
     因为2^-d = 2 * (2^-(d+1))
     所以f(n) <= 1
     当所以节点均为满节点或者叶子节点时等号成立.
+
+4.8:
+    prefixExp:  - * * a b + c d e
+    infixExp:   a * b * c + d - e
+    postfixExp: a b * c d + * e -
     
