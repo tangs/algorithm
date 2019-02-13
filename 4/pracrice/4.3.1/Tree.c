@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 struct Tree_Node {
     ElementType element;
@@ -239,8 +240,10 @@ void Tree_Prints(SearchTree t, int dp) {
     if (t == NULL)
         return;
     Tree_Prints(t->left, dp + 1);
-    for (int i = 0; i < dp; ++i)
-        printf("\t");
-    printf("%d\n", t->element);
+    char* tmp = malloc(dp + 1);
+    memset(tmp, '\t', dp);
+    tmp[dp] = '\0';
+    printf("%s%d\n", tmp, t->element);
+    free(tmp);
     Tree_Prints(t->right, dp + 1);
 }
