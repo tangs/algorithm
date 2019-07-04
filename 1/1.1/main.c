@@ -52,5 +52,12 @@ int main() {
     int data[] = {43, 2, 53, 9, 63, 32, 10, 6, 3};
     int len = sizeof(data) / sizeof(int);
     printf("%d\n", getValueByIdx(data, len, 4));
+    char* str = "Hello";
+    char str1[] = "Hello";
+    printf("%lu %lu\n", sizeof(str), sizeof(str1));
+    printf("%d \n", str1[5]);
+    int a = 0;
+    int b = sizeof(++a);
+    printf("%d %d\n", a, b);
     return 0;
 }
