@@ -24,13 +24,11 @@ void QSort(int *data, int n, int s, int e) {
     if (s >= e)
         return;
     int pivot = Median3(data, n, s, e);
-    int i = s + 1;
-    int j = e - 2;
+    int i = s;
+    int j = e - 1;
     for(;;) {
-        while(data[i] < pivot)
-            ++i;
-        while(data[j] > pivot)
-            --j;
+        while(data[++i] < pivot);
+        while(data[--j] > pivot);
         if (i < j) {
             swap(&data[i], &data[j]);
         } else {
